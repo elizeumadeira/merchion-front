@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import apiService from '../service/api'
 
 const email = ref('')
 const password = ref('')
 const erroMensagem = ref('')
-
-const { appContext } = getCurrentInstance()!
-const apiUrl = appContext.config.globalProperties.$apiUrl
 
 function isJsonObject(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -18,43 +16,34 @@ const handleSubmit = async (e: Event) => {
   const alertElement = document.getElementById('erro-mensagem');
   alertElement.classList.add('d-none');
 
-  const response = await fetch(`${apiUrl}/user/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email.value, password: password.value })
-  })
+  try {
+    const User = await apiService.login(email.value, password.value)
+    erroMensagem.value = ''
+    alertElement.classList.add('d-none')
 
-  const data = await response.json()
-  console.log(data.message);
+    // aqui seria a área onde eu colocaria o token do JWT no localstorage
+    // mas como o desafio não requer isso, eu vou adicionar as informações 
+    // vindas do endpoint login e considerar isso como "sessão"
 
-  if (![200, 302].includes(response.status)) {
+    // const { name, email } = data.user; // não funciona pq ja tem uma variável chamada "email"
+    const name = User.name;
+    const emailUser = User.email;
+    const id = User.id;
+    localStorage.setItem('id', id);
+    localStorage.setItem('name', name);
+    localStorage.setItem('email', emailUser);
+
+    // envia pro /admin
+    e.target.submit();
+  } catch (error) {
     erroMensagem.value = (
-      isJsonObject(data.message) ?
-        Object.values(data.message).flat().join('<br />') :
-        data.message
-    )
-      || 'Credenciais inválidas.'
-
-    if (alertElement) {
-      alertElement.classList.remove('d-none')
-    }
-    return;
+      isJsonObject(error.response.data.message) ?
+        Object.values(error.response.data.message).flat().join('<br />') :
+        error.response.data.message
+    ) || 'Credenciais inválidas.';
+    alertElement.classList.remove('d-none')
+    throw error; // Rethrow the error for handling in the component
   }
-
-  erroMensagem.value = ''
-  alertElement.classList.add('d-none')
-
-  // aqui seria a área onde eu colocaria o token do JWT no localstorage
-  // mas como o desafio não requer isso, eu vou adicionar as informações 
-  // vindas do endpoint login e considerar isso como "sessão"
-
-  // const { name, email } = data.user; // não funciona pq ja tem uma variável chamada "email"
-  const name = data.user.name;
-  const emailUser = data.user.email;
-  localStorage.setItem('name', name);
-  localStorage.setItem('email', emailUser);
-
-  e.target.submit();
 }
 </script>
 

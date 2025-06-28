@@ -21,10 +21,11 @@ const router = createRouter({
       name: 'admin',
       component: AreaUsuarioView,
       beforeEnter: (to, from, next) => {
+        const id = localStorage.getItem('id');
         const name = localStorage.getItem('name');
         const email = localStorage.getItem('email');
 
-        const isAuthenticated = name !== null && email !== null; // Duvido alguém hackear esse sistema!
+        const isAuthenticated = id !== null && name !== null && email !== null; // Duvido alguém hackear esse sistema!
         if (!isAuthenticated) {
           next({ name: 'home' });
         } else {
@@ -37,6 +38,7 @@ const router = createRouter({
       name: 'logout',
       component: {},
       beforeEnter: (to, from, next) => {
+        localStorage.removeItem('id');
         localStorage.removeItem('name');
         localStorage.removeItem('email');
         next({ name: 'home' });

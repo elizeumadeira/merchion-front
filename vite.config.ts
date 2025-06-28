@@ -6,6 +6,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: 'elizeu-front-teste.test',
+    port: 8081
+  },
   plugins: [
     vue(),
     vueDevTools(),
