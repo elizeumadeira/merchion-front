@@ -1,33 +1,36 @@
-# vue-project
+# Projeto Front Merchion
 
-This template should help get you started developing with Vue 3 in Vite.
+Projeto feito usando a NPM versão 10.9.2
 
-## Recommended IDE Setup
+É necessário rodar ``npm i`` para montar o projeto ja com as dependencias. 
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
+Antes de dar um start na API, é necessário adicionar o endereço local no arquivo de hosts. Estou disponibilizando para os dois sistemas, front e back:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+	127.0.0.1       elizeu-back-teste.test
+	127.0.0.1       elizeu-front-teste.test
 ```
 
-### Compile and Hot-Reload for Development
+Após esses passso, basta rodar o projeto usando o comando abaixo. Estou setando com uma porta personalizada:
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
+No CMD vai mostrar a URL gerada para poder acessar no browser mas ele vai gerar 
+```bash
+http://elizeu-front-teste.test:8081/
 ```
+
+Para testar o sistema é necesário que o back esteja rodando também. No projeto do back há as instruções para rodar o sistema de backend simultaneamente.
+
+A url da API é configurada no arquivo ```src\globals.js``` caso o projeto do backend esteja rodando em outro servidor.
+
+# Considerações
+
+Tentei seguir as recomendações na descrição e acredito ter coberto os requisitos de forma completa. Com relação à estrutura de pastas, adicionei as pastas api, helpers e services abaixo da pasta src.
+
+A pasta de componentes visuais ja possuem os componentes dentro da pasta sem nenhuma sub-pasta. Normalmente eu faria uma pasta por componente, e incluir o arquivo do componente em si, CSS e outros arquivos que possam vir a compor o componente em si (faço isso em projetos de React e replicaria nesse aqui também) mas como o projeto é realmente pequeno, deixei de fora essa configuração para facilitar a visualização no editor.
+
+Criei a pasta services, ao invés da API, pois estou acostumado a trabalhar com classes de serviço no backend, e API é um dos serviços. 
