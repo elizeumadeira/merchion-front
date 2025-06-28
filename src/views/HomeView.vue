@@ -1,25 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import apiService from '../service/api'
+import { flatErrorMessages } from '../helpers'
 
 const email = ref('')
 const password = ref('')
 const erroMensagem = ref('')
 
-function isJsonObject(value) {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 const handleSubmit = async (e: Event) => {
   e.preventDefault()
-
-  const alertElement = document.getElementById('erro-mensagem');
-  alertElement.classList.add('d-none');
 
   try {
     const User = await apiService.login(email.value, password.value)
     erroMensagem.value = ''
-    alertElement.classList.add('d-none')
 
     // aqui seria a área onde eu colocaria o token do JWT no localstorage
     // mas como o desafio não requer isso, eu vou adicionar as informações 
@@ -36,12 +29,8 @@ const handleSubmit = async (e: Event) => {
     // envia pro /admin
     e.target.submit();
   } catch (error) {
-    erroMensagem.value = (
-      isJsonObject(error.response.data.message) ?
-        Object.values(error.response.data.message).flat().join('<br />') :
-        error.response.data.message
-    ) || 'Credenciais inválidas.';
-    alertElement.classList.remove('d-none')
+    erroMensagem.value = flatErrorMessages(error.response.data.message, 'Credenciais inválidas.');
+
     throw error; // Rethrow the error for handling in the component
   }
 }
@@ -63,7 +52,8 @@ const handleSubmit = async (e: Event) => {
         Ainda não possui uma conta? Faça seu cadastro <RouterLink to="/cadastro">aqui</RouterLink>
       </label>
     </div>
-    <div class="alert alert-danger hidden d-none" id="erro-mensagem" role="alert">{{ erroMensagem }}</div>
+    <div class="alert alert-danger" :class="{ 'd-none': erroMensagem === '' }" id="erro-mensagem"
+      role="alert">{{ erroMensagem }}</div>
 
     <button class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
   </form>

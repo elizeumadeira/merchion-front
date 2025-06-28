@@ -42,6 +42,18 @@ export default {
             throw error;
         }
     },
+    async register(name: string, email: string, password: string, confirmpassword: string): Promise<User> {
+        try {
+            return await axiosInstance.post('/user', {
+                name,
+                email,
+                password,
+                confirmpassword
+            });
+        } catch (error) {
+            throw error;
+        }
+    },
     async me(): Promise<User> {
         try {
             const response = await axiosInstance.get('/user/me');
